@@ -34,7 +34,10 @@ def nav_comp(navsat_msg):
 	if (yaw_des < 0):
 		yaw_des = yaw_des + 2 * math.pi
 	distance = math.sqrt((navsat_msg.latitude - pos_des.latitude)**2 + (navsat_msg.longitude - pos_des.longitude)**2)
-	publ.speed = pos_kp * distance * math.exp(-30*(yaw_des - yaw_cur))
+	yaw_diff = yaw_des - yaw_cur
+	if(yaw_diff > math.pi):
+		yaw_diff = 2 * math.pi - yaw_diff
+	publ.speed = pos_kp * distance * math.exp(-30*(yaw_diff))
 	# print(math.exp(-3*(yaw_des - yaw_cur)))
 	if(publ.speed > 1.4):
 		publ.speed = 1.4
