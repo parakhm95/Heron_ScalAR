@@ -43,7 +43,12 @@ def nav_comp(navsat_msg):
 		publ.speed = 1.4
 	publ.yaw = yaw_des
 	course_publ=rospy.Publisher('/cmd_course', Course, queue_size=100)
-	course_publ.publish(publ)
+	if(distance < 0.0001 and i == len(course_desired) - 1):
+		publ.yaw = 0
+		publ.speed = 0
+		course_publ.publish(publ)
+	else:
+		course_publ.publish(publ)
 	print(publ)
 	print('distance away {0}'.format(distance))
 	print('going to {0} {1} which is {2} point'.format(pos_des.latitude,pos_des.longitude,i+1))
