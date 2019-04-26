@@ -1,5 +1,6 @@
 import rospy
 import math
+<<<<<<< HEAD
 import csv
 import sys
 import time
@@ -20,10 +21,23 @@ micron = "sounder"
 
 def navsat_get(navsat_msg):
     global latitude, longitude, micron
+=======
+
+import sys
+import time
+from sensor_msgs.msg import NavSatFix
+latitude = []
+longitude = []
+
+
+def navsat_get(navsat_msg):
+    global latitude, longitude
+>>>>>>> master
     latitude.append(navsat_msg.latitude)
     longitude.append(navsat_msg.longitude)
     print navsat_msg.longitude
     print navsat_msg.latitude
+<<<<<<< HEAD
     data.writerow([rospy.get_time(),navsat_msg.latitude,navsat_msg.longitude,micron])
 
 
@@ -44,6 +58,12 @@ def serdataget():
     return
 
 
+=======
+
+def spit():
+    print latitude
+    print longitude
+>>>>>>> master
 
 
 
@@ -53,7 +73,10 @@ def data_extraction():
     freq = 100  # hz
     rate = rospy.Rate(freq)
     while not rospy.is_shutdown():
+<<<<<<< HEAD
         serdataget()
+=======
+>>>>>>> master
         rate.sleep()
         # print("running")
 
