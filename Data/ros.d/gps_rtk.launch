@@ -1,0 +1,7 @@
+<!-- By default the script listens to eth0.  If this is not the port through which corrections are received, 
+be sure to add "-d <interface>" to the end of the args.  For example, if corrections are received through wlan0,
+add "-d wlan0" to the args.-->
+
+<launch>
+  <node pkg="husky_rtkgps_serialbridge" type="serial_bridge.py" name="nmea_rtk" args="/dev/clearpath/rtcm -b 57600 -d br0" respawn="true"/>
+</launch>

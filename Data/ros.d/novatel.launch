@@ -1,0 +1,18 @@
+<!-- A simple launch file for the Novatel GPS-->
+ 
+<launch>
+  <group ns="novatel">
+ 
+    <!-- NavSat Serial -->
+    <node pkg="nmea_comms" type="serial_node" name="nmea_serial_node" output="screen">
+      <param name="port" value="/dev/clearpath/novatel" />
+      <param name="baud" value="57600" />
+      <param name="frame_id" value="novatel_navsat" />
+    </node>
+ 
+    <!-- NavSat Processing -->
+    <node pkg="nmea_navsat_driver" type="nmea_topic_driver" name="nmea_topic_driver">
+    </node>
+ 
+  </group>
+</launch>

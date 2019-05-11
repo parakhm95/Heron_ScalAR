@@ -1,0 +1,8 @@
+/etc/ros/kinetic/ros.d/accessories.launch
+/usr/sbin/ros-start
+/etc/ros/kinetic/ros.d/base.launch
+/etc/systemd/system/multi-user.target.wants/ros.service
+/lib/systemd/system/ros.service
+/etc/ros/kinetic/ros.d
+/usr/sbin/ros-stop
+/etc/ros/kinetic/ros.d/.installed_files

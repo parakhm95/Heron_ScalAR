@@ -1,0 +1,79 @@
+<!--
+Launch driver components of Heron's supported accessories.
+
+Be careful that the defaults in this file are kept aligned with those
+in the URDF. See heron_description/urdf/accessories.urdf.xacro.
+-->
+<launch>
+
+  <!-- Optional RTCM serial stream for the Ublox GPS receiver. -->
+  <node pkg="heron_bringup" type="netserial" name="netserial_rtcm"
+        if="$(optenv HERON_NAVSAT_UBLOX_RTCM false)"
+        args="2524 /dev/clearpath/rtcm 115200" respawn="true">
+  </node>
+
+
+  <!-- Optional upgraded GPS receiver. -->
+  <group ns="navsat/upgrade" if="$(optenv HERON_NAVSAT_SMART6 0)">
+    <node pkg="nmea_comms" type="serial_node" name="nmea_serial_node" output="screen">
+      <param name="port" value="$(optenv HERON_NAVSAT_SMART6_PORT /dev/clearpath/gps)" />
+      <param name="baud" value="$(optenv HERON_NAVSAT_SMART6_BAUD 57600)" />
+      <param name="frame_id" value="$(optenv HERON_NAVSAT_SMART6_MOUNT rear)_navsat" />
+    </node>
+
+    <!-- NMEA Interpretation -->
+    <node pkg="nmea_navsat_driver" type="nmea_topic_driver" name="nmea_topic_driver" />
+
+    <!-- Optional RTK relay -->
+    <group if="$(optenv HERON_NAVSAT_SMART6_RTK 0)">
+      <node pkg="heron_bringup" type="navsat_rtk_relay" name="navsat_rtk_relay"
+            args="--serial-port /dev/clearpath/rtcm
+                  --device $(optenv HERON_NAVSAT_SMART6_RTK_DEVICE wlan0)
+                  --baud $(optenv HERON_NAVSAT_SMART6_RTK_BAUD 57600)" />
+    </group>
+  </group>
+
+  <!-- Optional LMS1xx-series LIDAR, typically front-facing. -->
+  <group if="$(optenv HERON_LASER 0)">
+    <node pkg="lms1xx" name="lms1xx" type="LMS1xx_node">
+      <param name="host" value="$(optenv HERON_LASER_HOST 192.168.1.14)" />
+      <param name="frame_id" value="$(optenv HERON_LASER_MOUNT front)_laser" />
+      <remap from="scan" to="$(optenv HERON_LASER_TOPIC front/scan)" />
+    </node>
+  </group>
+
+  <!-- Optional Axis P5514 PTZ camera, typically front-facing. -->
+  <group if="$(optenv HERON_AXIS_PTZ 0)"  ns="$(optenv HERON_AXIS_PTZ_NAME axis_ptz)">
+    <param name="hostname" value="$(optenv HERON_AXIS_PTZ_HOST 192.168.1.13)" />
+    <param name="width" value="$(optenv HERON_AXIS_PTZ_WIDTH 1280)" />
+    <param name="height" value="$(optenv HERON_AXIS_PTZ_HEIGHT 720)" />
+
+    <node pkg="axis_camera" type="axis.py" name="axis" />
+    <node pkg="axis_camera" type="axis_ptz.py" name="axis_ptz" if="$(optenv HERON_AXIS_PTZ_ENABLE_PTZ 1)" />
+
+    <node pkg="image_transport" type="republish" name="republish"
+          args="compressed" if="$(optenv HERON_AXIS_PTZ_ENABLE_THEORA 0)">
+      <remap from="in" to="image_raw" />
+      <remap from="out" to="image_raw_out" />
+    </node>
+
+    <node pkg="axis_camera" type="teleop.py" name="teleop" if="$(optenv HERON_AXIS_PTZ_ENABLE_TELEOP 1)">
+      <param name="enable_button" value="1" />
+      <param name="scale_pan_deg" value="25" />
+      <param name="scale_tilt_deg" value="25" />
+      <remap from="joy" to="/joy" />
+    </node>
+  </group>
+
+  <!-- Optional CEEPULSE Single Beam Echo Sounder. -->
+  <group if="$(optenv HERON_SONAR 0)">
+    <node pkg="nmea_comms" type="serial_node" name="nmea_sonar_serial_node">
+      <param name="port" value="$(optenv HERON_SONAR_PORT /dev/ttyS4)"/>
+      <param name="baud" value="$(optenv HERON_SONAR_BAUD 19200)"/>
+    </node>
+    <group if="$(optenv HERON_SONAR_ROS 1)">
+      <node pkg="heron_nmea" type="sonar_publisher" name="nmea_sonar_publisher" />
+    </group>
+  </group>
+
+</launch>
