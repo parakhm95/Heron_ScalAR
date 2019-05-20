@@ -8,7 +8,7 @@ gmap3 = gmplot.GoogleMapPlotter(39.9407133333 -75.2001903333, 13)
 # scatter method of map object  
 # scatter points on the google map 
 gmap3.scatter( latitude_list, longitude_list, '# FF0000', 
-                              size = 40, marker = False ) 
+                              size = 10, marker = False ) 
   
 # Plot method Draw a line in 
 # between given coordinates 
