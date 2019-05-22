@@ -11,23 +11,23 @@ Command input topics
 ------
 
 
-#### /cmd_drive
+### /cmd_drive
 **Input :**
 - Left thruster : 0 - 1.0
 - Right thruster : 0 - 1.0
 
-#### /cmd_helm
+### /cmd_helm
 **Input :**
 - Thrust : Newtons
 - Yaw rate : rad/s
 
 
-#### /cmd_wrench
+### /cmd_wrench
 **Input :**
 - Force vector
 - Torque vector
 
-#### /cmd_course
+### /cmd_course
 - Absolute yaw angle : radians : Doesn't work right now.
 - speed : 0 - 1.4 m/sec : Works but reliability is not confirmed.
 
