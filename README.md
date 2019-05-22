@@ -2,8 +2,6 @@ Heron position controller
 =========================
 Python file for controlling position of Heron using GPS and ROS topics.
 
-Topic Information
-=====
 
 The heron has a variety of topics available with different information on all of them. 
 The topics can be divided into multiple categories as follows:
@@ -13,19 +11,45 @@ Command input topics
 ------
 
 
-##### /cmd_drive
+#### /cmd_drive
 **Input :**
 - Left thruster : 0 - 1.0
 - Right thruster : 0 - 1.0
 
-##### /cmd_helm
-##### /cmd_wrench
-##### /cmd_course
-cmd_helm = Thrust, Yaw rate
-Not a perfect circle but tries
-cmd_wrench = Force vector, Torque Vector
-Reliable and rotates in the correct position
-cmd_course = yaw, speed = yaw doesn't work. Speed seems to work.
+#### /cmd_helm
+**Input :**
+- Thrust : Newtons
+- Yaw rate : rad/s
+
+
+#### /cmd_wrench
+**Input :**
+- Force vector
+- Torque vector
+
+#### /cmd_course
+- Absolute yaw angle : radians : Doesn't work right now.
+- speed : 0 - 1.4 m/sec : Works but reliability is not confirmed.
+
+
+
+IMU output topics
+------
+
+#### /imu/compass_heading
+None
+
+#### /imu/declination
+None
+
+#### /imu/raw_compass_heading
+TBD
+
+#### /imu/data
+**Output :**
+- Orientation : Quaternion
+- Angular velocities : rad/sec
+- Linear acceleration : m/sec^2
 
 
 /imu/compass_heading = data = nan
