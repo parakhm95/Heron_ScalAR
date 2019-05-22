@@ -13,7 +13,7 @@ Command input topics
 ------
 
 
-#####/cmd_drive
+#####\/cmd_drive\
 **Input :**
 - Left thruster : 0 - 1.0
 - Right thruster : 0 - 1.0
