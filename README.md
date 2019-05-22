@@ -1,7 +1,26 @@
-# Heron-position-controller
+Heron position controller
+=========================
 Python file for controlling position of Heron using GPS and ROS topics.
 
-cmd_drive = command for thrusters
+Topic Information
+=====
+
+The heron has a variety of topics available with different information on all of them. 
+The topics can be divided into multiple categories as follows:
+
+
+Command input topics
+------
+
+
+#####/cmd_drive
+**Input :**
+- Left thruster : 0 - 1.0
+- Right thruster : 0 - 1.0
+
+#####/cmd_helm
+#####/cmd_wrench
+#####/cmd_course
 cmd_helm = Thrust, Yaw rate
 Not a perfect circle but tries
 cmd_wrench = Force vector, Torque Vector
