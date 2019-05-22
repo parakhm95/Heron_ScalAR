@@ -13,14 +13,14 @@ Command input topics
 ------
 
 
-#####\/cmd_drive\
+##### /cmd_drive
 **Input :**
 - Left thruster : 0 - 1.0
 - Right thruster : 0 - 1.0
 
-#####/cmd_helm
-#####/cmd_wrench
-#####/cmd_course
+##### /cmd_helm
+##### /cmd_wrench
+##### /cmd_course
 cmd_helm = Thrust, Yaw rate
 Not a perfect circle but tries
 cmd_wrench = Force vector, Torque Vector
