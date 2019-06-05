@@ -6,6 +6,7 @@ import sys
 import time
 from sensor_msgs.msg import NavSatFix
 import serial
+from std_msgs.msg import Float32
 
 ser = serial.Serial()
 ser.baudrate = 9600
@@ -13,49 +14,40 @@ ser.port = '/dev/ttyUSB0'
 ser.timeout = 0.1
 ser.open()
 ser.reset_input_buffer()
-micron="sounder"
+micron_output=0.00
 
 
-def navsat_get(navsat_msg):
-    global latitude, longitude, micron
-    latitude.append(navsat_msg.latitude)
-    longitude.append(navsat_msg.longitude)
-    print navsat_msg.longitude
-    print navsat_msg.latitude
-    data.writerow([rospy.get_time(), navsat_msg.latitude, navsat_msg.longitude, micron])
 
+def serdataget():
+    if(ser.in_waiting):
+        lmao = ser.readline()
+        print(lmao.find(',M,'))
+        if(lmao.find(',M,') != -1):
+            micron_str = lmao[16]+lmao[17]+lmao[18]+lmao[19]+lmao[20]+lmao[21]
+    return micron_str
 
-def spit():
-    global file
-    print latitude
-    print longitude
-    file.close()
-
-
-# def serdataget():
-#     global micron
-#     if(ser.in_waiting):
-#         lmao = ser.readline()
-#         print(lmao.find(',M,'))
-#         if(lmao.find(',M,') != -1):
-#             micron = lmao[16]+lmao[17]+lmao[18]+lmao[19]+lmao[20]+lmao[21]
-#         # print(lmao[16]+lmao[17]+lmao[18]+lmao[19]+lmao[20]+lmao[21])
-#     return
+def serclose():
+    ser.close()
 
 
 def data_extraction():
-    rospy.init_node('data_extraction', anonymous=True)
-    rospy.Subscriber("/navsat/fix", NavSatFix, navsat_get)
+    global micron_output
+    rospy.init_node('micron_echosounder', anonymous=True)
+    pub = rospy.Publisher('/echosounder', Float32, queue_size=5)
     freq=100  # hz
     rate=rospy.Rate(freq)
     while not rospy.is_shutdown():
-        # serdataget()
+        micron_output = float(serdataget())
+        pub.publish(micron_output)
         rate.sleep()
         # print("running")
 
     rospy.spin()
-    rospy.on_shutdown(spit)
+    rospy.on_shutdown(serclose)
 
 
-if __name__=='__main__':
-    data_extraction()
+if __name__ == '__main__':
+    try:
+        data_extraction()
+    except rospy.ROSInterruptException:
+        pass
