@@ -74,6 +74,34 @@ Temperature
 
 Nodes information    
 --------------------------------------------------------------------------------
+
+/axis/axis
+/axis/axis_ptz
+/axis/teleop
+/axis_ptz/axis
+/axis_ptz/axis_ptz
+/axis_ptz/teleop
+/base_to_basefootprint_tf
+/controller - launched by controller.launch/base.launch
+/imu/declination_compute - launched by base.launch
+/imu_compass - launched by imu_compass.launch/base.launch
+/navsat/enu_from_fix - launched by base.launch
+/navsat/nmea_serial_node - launched by base.launch
+/navsat/nmea_topic_driver - launched by base.launch
+/navsat/upgrade/nmea_serial_node - launched by accessories.launch
+/navsat/upgrade/nmea_topic_driver - launched by accessories.launch
+/navsat_to_gps_tf
+/novatel/nmea_serial_node - launched by novatel.launch
+/novatel/nmea_topic_driver - launched by novatel.launch
+/robot_pose_ekf - launched by base.launch
+/robot_state_publisher
+/rosout
+/rosserial_message_info
+/rosserial_server
+/um6_driver - launched by base.launch
+/wifi_lights
+
+
  
 ### Node [/um6_driver]
 
@@ -677,11 +705,5 @@ vector:
   y: 0.22785136711
   z: 0.958115086999
 ---
-
-
-
-
-
-
 
 -->
