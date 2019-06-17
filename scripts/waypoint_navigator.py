@@ -42,7 +42,7 @@ def yaw_callback(Float32_msg):
 
 
 def control_publisher(event):
-    global yaw_cur, i, kp, pos_cur, yaw_des_old, course_desiredi, wypt_dist_thresh, cmd_dt, base_thrust, met_lat, met_lon
+    global yaw_cur, i, kp, pos_cur, yaw_des_old, course_desired, wypt_dist_thresh, cmd_dt, base_thrust, met_lat, met_lon
     pub_msg = Helm()
     helm_pub = rospy('/cmd_helm', Helm, queue_size=100)
 
