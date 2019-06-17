@@ -92,7 +92,7 @@ def control_publisher(event):
         pub_msg.thrust = base_thrust
     # gradually slow down as wel approach the waypoint
     else:
-        pub_msg.thrust = base_thrust*dist_error/10.0
+        pub_msg.thrust = base_thrust*dist_err/10.0
 
     # adjust thrust according to yaw_error, i.e., adjust yaw first before thrusting forwayd
     pub_msg.thrust = pub_msg.thrust*math.exp(-10*math.fabs(yaw_error) )
