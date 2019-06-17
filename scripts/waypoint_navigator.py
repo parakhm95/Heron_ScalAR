@@ -24,6 +24,10 @@ wypt_dist_thresh = 2.0  # distance threshold to stop or switch to next way point
 cmd_dt = 0.1            # time interval for cmd_helm publishing
 base_thrust = 1.0       # the base thrust level at which the Heron will run
 
+# conversions from lon/lat to meters
+met_lat = 111033.4717 
+met_lon = 85467.2528
+
 def nav_comp(navsat_msg):
     global pos_cur
     pos_cur = navsat_msg
@@ -38,14 +42,16 @@ def yaw_callback(Float32_msg):
 
 
 def control_publisher(event):
-    global yaw_cur, i, kp, pos_cur, yaw_des_old, course_desiredi, wypt_dist_thresh, cmd_dt, base_thrust
+    global yaw_cur, i, kp, pos_cur, yaw_des_old, course_desiredi, wypt_dist_thresh, cmd_dt, base_thrust, met_lat, met_lon
     pub_msg = Helm()
     helm_pub = rospy('/cmd_helm', Helm, queue_size=100)
 
     pos_des_lat = course_desired[i][0]
     pos_des_lon = course_desired[i][1]
 
-    dist_err = math.sqrt( (pos_des_lat-pos_cur.latitude)**2 + (pos_des_lon - pos_cur.longitude)**2 )
+    delta_lat = (pos_des_lat-pos_cur.latitude)*met_lat
+    delta_lon = (pos_des_lon - pos_cur.longitude)*met_lon
+    dist_err = math.sqrt( delta_lat**2 + delta_lon**2 )
     
     if( dist_err < wypt_dist_thresh) 
         # go to next way point if within distance threshold
@@ -53,7 +59,9 @@ def control_publisher(event):
             i = i+1
             pos_des_lat = course_desired[i][0]
             pos_des_lon = course_desired[i][1]
-            dist_err = math.sqrt( (pos_des_lat-pos_cur.latitude)**2 + (pos_des_lon - pos_cur.longitude)**2 )
+            delta_lat = (pos_des_lat-pos_cur.latitude)*met_lat
+            delta_lon = (pos_des_lon - pos_cur.longitude)*met_lon
+            dist_err = math.sqrt( delta_lat**2 + delta_lon**2 )
         # stop if at last waypoint
         else:
             pub_msg.thrust = 0.0
@@ -61,7 +69,7 @@ def control_publisher(event):
             helm_pub.publish(pub_msg)
             return
     
-    yaw_des = math.atan2( pos_des_lat-pos_cur.latitude, pos_des_lon-pos_cur.longitude)
+    yaw_des = math.atan2( delta_lat, delta_lon)
     if( yaw_des < 0):
         yaw_des = 2*math.pi + yaw_des
 
@@ -80,7 +88,7 @@ def control_publisher(event):
     pub_msg.yaw_rate = kp*yaw_error + yaw_des_rate
     
     # if far away, thrusht is at base thrust level
-    if( dist_error > 10 ):
+    if( dist_err > 10 ):
         pub_msg.thrust = base_thrust
     # gradually slow down as wel approach the waypoint
     else:
