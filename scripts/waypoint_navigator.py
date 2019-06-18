@@ -44,7 +44,7 @@ def yaw_callback(Float32_msg):
 def control_publisher(event):
     global yaw_cur, i, kp, pos_cur, yaw_des_old, course_desired, wypt_dist_thresh, cmd_dt, base_thrust, met_lat, met_lon
     pub_msg = Helm()
-    helm_pub = rospy('/cmd_helm', Helm, queue_size=100)
+    helm_pub = rospy.Publisher('/cmd_helm', Helm, queue_size=100)
 
     pos_des_lat = course_desired[i][0]
     pos_des_lon = course_desired[i][1]
@@ -53,7 +53,7 @@ def control_publisher(event):
     delta_lon = (pos_des_lon - pos_cur.longitude)*met_lon
     dist_err = math.sqrt( delta_lat**2 + delta_lon**2 )
     
-    if( dist_err < wypt_dist_thresh) 
+    if (dist_err < wypt_dist_thresh) :
         # go to next way point if within distance threshold
         if( i < len(course_desired)-1 ):
             i = i+1
