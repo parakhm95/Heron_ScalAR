@@ -1,0 +1,8 @@
+<launch>
+	<node pkg="heron_scalar" name="yaw_fusion" type="yaw_fusion.py" output="screen">
+  	</node>
+
+	<node pkg="heron_scalar" name="waypoint_navigator" type="waypoint_navigator.py" output="screen">
+  	</node>
+
+</launch>

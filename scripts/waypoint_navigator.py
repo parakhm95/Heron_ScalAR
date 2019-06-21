@@ -19,7 +19,7 @@ course_desired = ([49.9000000007,8.89999999997],
 	[49.9000000007,8.89999999997+0.0005],
 	[49.9000000007,8.89999999997])
 i = 0
-kp=1
+kp=2
 wypt_dist_thresh = 2.0  # distance threshold to stop or switch to next way point
 cmd_dt = 0.1            # time interval for cmd_helm publishing
 base_thrust = 1.0       # the base thrust level at which the Heron will run
@@ -89,7 +89,7 @@ def control_publisher(event):
     
     # if far away, thrusht is at base thrust level
     if( dist_err > 10 ):
-        pub_msg.thrust = base_thrust
+        pub_msg.thrust = base_thrust    
     # gradually slow down as wel approach the waypoint
     else:
         pub_msg.thrust = base_thrust*dist_err/10.0
@@ -99,6 +99,11 @@ def control_publisher(event):
     
     # publish message on topic
     helm_pub.publish(pub_msg)
+    
+    # print("yaw desired = ", yaw_des)
+    # print(" yaw current = ", yaw_cur)
+    # print("yaw error= ", yaw_error)
+    # print("yaw rate desired= ", pub_msg.yaw_rate)
     return
     
 def course_publisher():
