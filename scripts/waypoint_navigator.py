@@ -13,11 +13,14 @@ from std_msgs.msg import Float32
 pos_cur=NavSatFix()
 yaw_cur = 0.00
 yaw_des_old = 0.0
-course_desired = ([49.9000000007,8.89999999997],
-	[49.9000000007+0.0005,8.89999999997],
-	[49.9000000007+0.0005,8.89999999997+0.0005],
-	[49.9000000007,8.89999999997+0.0005],
-	[49.9000000007,8.89999999997])
+course_desired = ([39.940155, -75.204901],
+	[39.940081,-75.204896],
+	[39.940112,-75.204666],
+	[39.939988,-75.204672],
+	[39.940006,-75.204896],
+    [39.939925,-75.204902],
+    [39.939927,-75.204662],
+    [39.940204,-75.204660])
 i = 0
 kp=2
 wypt_dist_thresh = 2.0  # distance threshold to stop or switch to next way point
@@ -45,6 +48,8 @@ def control_publisher(event):
     global yaw_cur, i, kp, pos_cur, yaw_des_old, course_desired, wypt_dist_thresh, cmd_dt, base_thrust, met_lat, met_lon
     pub_msg = Helm()
     helm_pub = rospy.Publisher('/cmd_helm', Helm, queue_size=100)
+    lat_pub = rospy.Publisher('/waypoint_lat', Float32, queue_size=100)
+    long_pub = rospy.Publisher('/waypoint_long', Float32, queue_size=100)
 
     pos_des_lat = course_desired[i][0]
     pos_des_lon = course_desired[i][1]
@@ -52,7 +57,10 @@ def control_publisher(event):
     delta_lat = (pos_des_lat-pos_cur.latitude)*met_lat
     delta_lon = (pos_des_lon - pos_cur.longitude)*met_lon
     dist_err = math.sqrt( delta_lat**2 + delta_lon**2 )
-    
+    print ("dist error", dist_err)
+    print (i)
+    lat_pub.publish(float(course_desired[i][0]))
+    long_pub.publish(float(course_desired[i][1]))
     if (dist_err < wypt_dist_thresh) :
         # go to next way point if within distance threshold
         if( i < len(course_desired)-1 ):
@@ -62,6 +70,7 @@ def control_publisher(event):
             delta_lat = (pos_des_lat-pos_cur.latitude)*met_lat
             delta_lon = (pos_des_lon - pos_cur.longitude)*met_lon
             dist_err = math.sqrt( delta_lat**2 + delta_lon**2 )
+
         # stop if at last waypoint
         else:
             pub_msg.thrust = 0.0

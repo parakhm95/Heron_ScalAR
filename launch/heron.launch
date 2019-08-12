@@ -5,4 +5,12 @@
 	<node pkg="heron_scalar" name="waypoint_navigator" type="waypoint_navigator.py" output="screen">
   	</node>
 
+	<node pkg="heron_scalar" name="micron_echosounder" type="micron_echosounder.py" output="screen">
+  	</node>
+
+  	<include file="$(find heron_scalar)/launch/robot_pose_ekf.launch"/>
+
+
+
+
 </launch>
